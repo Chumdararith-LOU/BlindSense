@@ -199,26 +199,7 @@ All of this runs per processed frame (~3–4 Hz by design, see §9):
 
 ---
 
-## 8. Calibration & tuning toolchain
-
-Detector constants are **not guesses** — they were swept offline against real video:
-
-```bash
-mkdir -p calib_frames
-ffmpeg -i road_video.mp4 -vf "fps=2" -q:v 3 calib_frames/frame_%04d.jpg   # or extract_frames.py
-python tune_pipeline.py calib_frames          # sweeps THRESH / MARGIN / MIN_PIX_FRAC
-python tune_pipeline.py calib_frames calib.txt  # optional scale fit: "frame_0012.jpg 2.0" per line
-```
-
-`tune_pipeline.py` runs the *same* ONNX model on extracted frames and replays the
-ground-aware decision rule over a parameter grid, printing obstacle/stop/steer
-percentages per combo. Current shipped values (`ObstacleDetector.kt`):
-`THRESH=2.0 m`, `MARGIN=0.5 m`, `MIN_PIX_FRAC=0.01`, chosen from a 742-frame road sweep.
-To re-tune: pick a row from the table, update the companion-object constants.
-
----
-
-## 9. Performance & design decisions
+## 8. Performance & design decisions
 
 * **~3–4 Hz decision rate is intentional.** Human walking ≈1.4 m/s; a distinct pulse
   every 250–1200 ms is readable, battery-friendly, and thermally safe. Chasing 30 FPS
@@ -229,7 +210,7 @@ To re-tune: pick a row from the table, update the companion-object constants.
   `onnxruntime-android` ships no QNN EP, and native experiments caused segfaults.
   Reproducible QNN export lives in `qnn-export/` for a future revisit.
 
-## 10. Known limitations & roadmap
+## 9. Known limitations & roadmap
 
 * Drop-off/curb detection is a naive row-jump heuristic → **Phase B**: IMU-pitch ground
   model, 2-frame temporal confirmation, EDGE (0.2–0.5 m) vs DROP (>0.5 m) bands.
@@ -237,7 +218,7 @@ To re-tune: pick a row from the table, update the companion-object constants.
 * IPs are DHCP-assigned per boot → static-IP pinning planned.
 * Portrait/landscape UI validation, absolute-scale calibration, belt telemetry heartbeat.
 
-## 11. Troubleshooting
+## 10. Troubleshooting
 
 | Symptom | Cause / fix |
 |---|---|
@@ -247,8 +228,3 @@ To re-tune: pick a row from the table, update the companion-object constants.
 | `ORT_INVALID_ARGUMENT … Expected: 480` | model `imgsz` ≠ `INPUT_SIZE` in `YoloDepthEstimator.kt` — they must match |
 | No phone vibration on clear path | by design: CENTER = silence |
 | App dies when backgrounded | normal Android behavior; dev note: `adb shell svc power stayon true` |
-
-## 12. Credits & license
-
-Ultralytics YOLO26-Depth · ONNX Runtime · AndroidX CameraX · Espressif ESP32 / arduino-esp32 · OpenCV (tooling).
-License: _add your choice here_.
