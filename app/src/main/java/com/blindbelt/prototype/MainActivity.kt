@@ -28,8 +28,6 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
-    // Set to true and update STREAM_URL if using ESP32-CAM hardware.
-    private val USE_MJPEG_SOURCE = false
     private var mjpegStreamReader: MjpegStreamReader? = null
     private val inferenceScope = CoroutineScope(Dispatchers.Default)
     private var inferenceJob: Job? = null
@@ -102,9 +100,9 @@ class MainActivity : AppCompatActivity() {
         imuTracker = ImuTracker(sensorManager)
         imuTracker.startTracking()
         
-        if (USE_MJPEG_SOURCE) {
+        if (BeltConfig.USE_MJPEG_SOURCE) {
             // Streaming mode: pull frames from the ESP32 MJPEG stream, skip CameraX entirely
-            Log.d("BeltSteering", "Video source: MJPEG $STREAM_URL")
+            Log.d("BeltSteering", "Video source: MJPEG ${BeltConfig.STREAM_URL}")
             val reader = MjpegStreamReader { bitmap ->
                 runOnUiThread {
                     previewImageView.setImageBitmap(bitmap)

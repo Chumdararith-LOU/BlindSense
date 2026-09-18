@@ -180,14 +180,18 @@ All of this runs per processed frame (~3–4 Hz by design, see §9):
    (two discs, bottom of screen) show exactly what a physical belt would feel.
    Phone vibrator mirrors the patterns.
 
+> Every hardware setting (camera source, stream URL, belt IP/port) lives in one file:
+> **`app/src/main/java/com/blindbelt/prototype/BeltConfig.kt`**. Software-only mode needs
+> no edits — the default `USE_MJPEG_SOURCE = false` uses the phone's native camera.
+
 ## 7. Full hardware setup
 
 1. Phone: enable hotspot (2.4 GHz).
 2. Flash `esp32-cam/cam_streamer.ino` with hotspot credentials → note `[CAM] IP`.
    Verify `http://<CAM_IP>:81/stream` in the phone browser.
 3. Flash `belt_motors/belt_motors.ino` with hotspot credentials → note `[BELT] IP`.
-4. In the app: `USE_MJPEG_SOURCE = true`, `STREAM_URL = "http://<CAM_IP>:81/stream"`,
-   `UDP_HOST = "<BELT_IP>"` → rebuild & install.
+4. In the app, edit **`BeltConfig.kt`** (the single edit point): set `USE_MJPEG_SOURCE = true`,
+   `STREAM_URL = "http://<CAM_IP>:81/stream"`, `UDP_HOST = "<BELT_IP>"` → rebuild & install.
 5. **Three-witness test** (widget / belt serial / scene):
    | Scene | Expected |
    |---|---|

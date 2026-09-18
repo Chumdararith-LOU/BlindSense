@@ -14,8 +14,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.atomic.AtomicReference
 
-const val STREAM_URL = "http://10.118.98.135:81/stream"
-
 class MjpegStreamReader(
     private val onFrame: (Bitmap) -> Unit
 ) {
@@ -48,7 +46,7 @@ class MjpegStreamReader(
     // ponytail: blocking read() is only interrupted by readTimeout (15s), so stop()
     // releases the socket within one timeout window. Upgrade with runInterruptible if teardown latency matters.
     private fun readStream() {
-        val connection = (URL(STREAM_URL).openConnection() as HttpURLConnection).apply {
+        val connection = (URL(BeltConfig.STREAM_URL).openConnection() as HttpURLConnection).apply {
             connectTimeout = 5000
             readTimeout = 15000
         }
