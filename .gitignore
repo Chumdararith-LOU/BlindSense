@@ -1,0 +1,37 @@
+.gradle/
+build/
+.cxx/
+.idea/
+local.properties
+*.apk
+calib_frames/
+calib_dropoff/
+*.pyc
+__pycache__/
+.DS_Store
+
+# Gradle wrapper distribution downloads (wrapper fetches its own)
+gradle-*.zip
+
+# Large media & scratch folders
+*.mp4
+temp_extract/
+
+# QNN export binaries (keep the scripts/Dockerfile, skip the big files)
+qnn-export/*.onnx
+qnn-export/*.cache
+qnn-export/calib_images/
+qnn-export/calib_data/
+
+# Source weights: Ultralytics auto-downloads these; the ONNX your app
+# needs is already bundled in app/src/main/assets/
+yolo26n-depth.pt
+
+# Editor / agent tooling
+.agents/
+.vscode/
+opencode.json
+skills-lock.json
+
+# Test/scratch artifacts
+belt_widget.png
